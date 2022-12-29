@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        html, body{
+            height: 100%;
+        }
+        .wrapper{
+            height: 100%;
+        }
+        .getСard2 {
+            opacity: 0;
+        }
+
+        .stopBtn2 {
+            opacity: 0;
+        }
+        .img {
+            margin-top: -1000px;
+            transition: 1s;
+        }
+        .img2 {
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="bg-secondary text-center py-3">
+        <h1>Игра 21</h1>
+    </div>
+    <div class="d-flex wrapper ">
+        <div class="col-6 bg-info pt-5">
+            <div class="border-bottom pb-5 text-center" style="height: 100px;">
+                <button class="getCard1 btn btn-success">Взять карту игрок 1</button>
+                <button class="stopBtn1 btn btn-danger">Стоп игрок 1</button>
+            </div>
+            <h3>Название карты: <span class="namecard1"></span> </h3>
+            <div class="hand1 bg-success"></div>
+            <h3>Сумма: <span class="summPlayer1"></span> </h3>  
+            
+
+        </div>
+        <div class="col-6 bg-warning  pt-5">
+            <div class="border-bottom pb-5 text-center" style="height: 100px;">
+                <button class="getСard2 btn btn-success">Взять карту игрок 2</button>
+                <button class="stopBtn2 btn btn-danger">Стоп игрок 2</button>
+            </div>
+            <h3>Название карты: <span class="namecard2"></span> </h3>
+            <h3 class="hand2 bg-success"></h3>
+            <h3>Сумма: <span class="summPlayer2"></span> </h3>  
+        </div>
+    </div>
+  
+    <script>
+        let cards = [{ name:"пики", number:2, image:"spades/2.png" },{ name:"пики", number:3, image:"spades/3.png" },{ name:"пики", number:4, image:"spades/4.png" },{ name:"пики", number:5, image:"spades/5.png" },{ name:"пики", number:6, image:"spades/6.png" },{ name:"пики", number:7, image:"spades/7.png" },{ name:"пики", number:8, image:"spades/8.png" },{ name:"пики", number:9, image:"spades/9.png" },{ name:"пики", number:10, image:"spades/10.png" }, { name:"пики", number:11, image:"spades/11.png" },
+         {name:"трефы", number:2, image:"clubs/2.png"},{name:'трефы', number:3, image:"clubs/3.png"},{name:'трефы', number:4, image:"clubs/4.png"},{name:'трефы', number:5, image:"clubs/5.png"},{name:'трефы', number:6, image:"clubs/6.png"},{name:'трефы', number:7, image:"clubs/7.png"},{name:'трефы', number:8, image:"clubs/8.png"},{name:'трефы', number:9, image:"clubs/9.png"},{name:'трефы', number:10, image:"clubs/10.png"},{name:'трефы', number:11, image:"clubs/11.png"},
+         {name:"червы", number:2, image:"hearts/2.png"},{name:"червы", number:3, image:"hearts/3.png"},{name:"червы", number:4, image:"hearts/4.png"},{name:"червы", number:5, image:"hearts/5.png"},{name:"червы", number:6, image:"hearts/6.png"},{name:"червы", number:7, image:"hearts/7.png"},{name:"червы", number:8, image:"hearts/8.png"},{name:"червы", number:9, image:"hearts/9.png"},{name:"червы", number:10, image:"hearts/10.png"},{name:"червы", number:11, image:"hearts/11.png"}, 
+         {name:"бубны", number:2, image:"diamonds/2.png"}, {name:"бубны", number:3, image:"diamonds/3.png"},{name:"бубны", number:4, image:"diamonds/4.png"},{name:"бубны", number:5, image:"diamonds/5.png"},{name:"бубны", number:6, image:"diamonds/6.png"},{name:"бубны", number:7, image:"diamonds/7.png"},{name:"бубны", number:8, image:"diamonds/8.png"},{name:"бубны", number:9, image:"diamonds/9.png"},{name:"бубны", number:10, image:"diamonds/10.png"},{name:"бубны", number:11, image:"diamonds/11.png"}];
+
+        let getCard1 = document.querySelector(".getCard1");
+        let getCard2 = document.querySelector(".getСard2");
+        let stopBtn1 = document.querySelector(".stopBtn1");
+        let stopBtn2 = document.querySelector(".stopBtn2");
+
+        let namecard1  = document.querySelector(".namecard1");
+        let namecard2  = document.querySelector(".namecard2");
+
+        let summPlayer1  = document.querySelector(".summPlayer1");
+        let summPlayer2  = document.querySelector(".summPlayer2");
+
+
+        let playerHand1  = document.querySelector(".hand1");
+        let playerHand2  = document.querySelector(".hand2");
+
+        let player1_cards = [];
+        let player1_summ = 0;
+
+        let player2_cards = [];
+        let player2_summ = 0;
+
+        function random() {
+            let random = Math.round(Math.random() * cards.length);
+
+            if(random==cards.length){// 21 22 
+                random = random - 1;
+            } 
+
+            return random;
+        }
+
+        let player1_sum = 0;
+
+        let player1 = true;
+        let player2 = false;
+
+        getCard1.onclick = function() {
+            if (player2==false) {
+                let index = random();
+
+                let card = cards[index];
+               
+                namecard1.innerHTML = card.name + card.number;
+
+                player1_sum = player1_sum + card.number;
+                summPlayer1.innerHTML = player1_sum;
+                cards.splice(index,1);
+
+                let cardImage = document.createElement("img");
+                playerHand1.appendChild(cardImage);
+                cardImage.src = card.image;
+                cardImage.classList.add("img");
+
+                let showCard = function() {
+                    cardImage.classList.add("img2")
+                }
+                setTimeout(showCard, 2)
+
+                if(player1_sum>21){
+                    alert("ты проиграл, победил игрок 2");
+                    //закрытие кнопок
+                } else if (player1_sum == 21) {
+                    alert("Победа игрок 1")
+                    //закрывает все
+                }
+            }
+        }
+
+        stopBtn1.onclick = function() {
+            player2=true;
+            player1=false;
+            getCard1.style.opacity = 0;
+            stopBtn1.style.opacity = 0;
+            getCard2.style.opacity = 1;
+            stopBtn2.style.opacity = 1;
+        }
+
+        let player2_sum = 0;
+
+        getCard2.onclick = function() {
+            if (player1==false) {
+                let index = random();
+
+                let card = cards[index];
+               
+                namecard2.innerHTML = card.name + card.number;
+
+                player2_sum = player2_sum + card.number;
+                summPlayer2.innerHTML = player2_sum;
+                cards.splice(index,1);
+
+                let cardImage = document.createElement("img");
+                playerHand2.appendChild(cardImage);
+                cardImage.src = card.image;
+                cardImage.classList.add("img");
+
+                let showCard = function() {
+                    cardImage.classList.add("img2")
+                }
+                setTimeout(showCard, 2)
+
+                if(player2_sum>21){
+                    alert("ты проиграл, победил игрок 1");
+                    //закрытие кнопок
+                } else if (player2_sum == 21) {
+                    alert("Победа игрок 2")
+                    //закрывает все
+                }
+            }
+        }
+
+        stopBtn2.onclick = function() {
+            if(player2==true){
+                if(player1_sum>player2_sum){
+                    alert("победил игрок 1")
+                } else if (player1_sum<player2_sum) {
+                    alert("победил игрок 2")
+                } else {
+                    alert("draw")
+                }
+            }
+        }
+
+    </script>
+    <!--1. У каждого игрока есть кнопка взять карту. Кнопка: Игрок 1: взять карту. Игрок 2: взять карту. 
+    2. Игрок 1 набирает карты, пока не нажмёт кнопку Стоп. Карты видны
+    3. Затем, игрок 2 начинает брать карты, пока не нажмёт кнопку Стоп. Карты видны
+    4. В конце игры проверяем сумму игроков. Выиграл, ничья(если у обоих больше 21)
+    
+    3. Из колоды карт достаётся карта игроку рандомная. Эта выпавашая карта больше недоступна в колоде. 
+    4. Игра считает сумму карт у каждого игрока.
+    7. В конце игры раскрыть все карты
+-->
+    
+</body>
+</html>
